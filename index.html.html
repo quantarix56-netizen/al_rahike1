@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>al_rahike — of akfane</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+  <style>
+    /* Styles identiques à la version précédente */
+    :root{--bg:#ffffff;--muted:#888;--accent:#9b2a2a;--accent-2:#f2f2f2;--container:1200px;}
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Montserrat,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial; background:var(--bg);color:var(--accent)}
+    header{border-bottom:1px solid #eee;background:transparent}
+    .topbar{max-width:var(--container);margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:22px 20px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .brand h1{font-family:'Playfair Display',serif;margin:0;font-size:28px;letter-spacing:0.5px}
+    .brand p{margin:0;font-size:12px;color:var(--muted)}
+    nav ul{list-style:none;display:flex;gap:24px;margin:0;padding:0;align-items:center}
+    nav a{color:var(--muted);text-decoration:none;font-size:15px}
+    nav a.active{color:var(--accent);font-weight:600}
+    .container{max-width:var(--container);margin:36px auto;padding:0 20px}
+    .products{display:grid;grid-template-columns:repeat(4,1fr);gap:48px 40px;padding:20px 0}
+    .card{text-align:center;padding-bottom:100px}
+    .product-image{width:100%;aspect-ratio:3/4;display:flex;align-items:center;justify-content:center;background:transparent}
+    .product-image img{max-width:100%;max-height:100%;object-fit:contain;box-shadow:0 100px 50px rgba(0,0,0,0.06);border-radius:3px}
+    .title{font-size:20px;color:var(--muted);margin-top:18px}
+    .price{margin-top:5px;font-weight:1000}
+    .price .old{color:var(--muted);text-decoration:line-through;margin-right:8px;font-weight:400}
+    .about{background:var(--accent-2);padding:60px 20px;margin-top:40px;text-align:center}
+    .about h2{font-family:'Playfair Display',serif;font-size:32px;margin:0 0 14px}
+    .about p{max-width:760px;margin:0 auto;color:var(--muted);line-height:1.7}
+    footer{background:#0f0f0f;color:#fff;padding:48px 20px;margin-top:40px}
+    .footer-grid{max-width:var(--container);margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+    .footer-grid a{color:#ddd;text-decoration:none}
+    .newsletter{grid-column:1/-1;margin-top:28px;display:flex;gap:12px;align-items:center}
+    .newsletter input{flex:1;padding:12px 14px;border:0;border-radius:3px}
+    .newsletter button{padding:12px 18px;border:0;background:#fff;color:#111;border-radius:3px;font-weight:600}
+    @media (max-width:1100px){.products{grid-template-columns:repeat(3,1fr)}}
+    @media (max-width:860px){.products{grid-template-columns:repeat(2,1fr);gap:36px}.brand h1{font-size:22px}}
+    @media (max-width:520px){.products{grid-template-columns:1fr}nav{display:none}.topbar{padding:14px}.footer-grid{grid-template-columns:1fr}.newsletter{flex-direction:column;align-items:stretch}.newsletter button{width:100%}}
+    .chat{position:fixed;right:18px;bottom:18px;background:#111;color:#fff;padding:12px 14px;border-radius:6px;box-shadow:0 8px 20px rgba(0,0,0,.2);font-weight:600}
+    .add-to-cart {
+          margin-top: 12px;
+          padding: 10px 16px;
+          background: var(--accent);
+          color: #fff;
+          border: none;
+          border-radius: 4px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: background 0.2s ease;
+        }
+
+    .add-to-cart:hover {
+        background: #7a2121;
+    }
+
+
+  </style>
+</head>
+<body>
+  <header>
+    <div class="topbar">
+      <div class="brand">
+        <img src="F:\logo.jpeg" style="width:46px;height:46px;border-radius:6px;object-fit:cover">
+        <div>
+          <h1>AL_rahike
+          <p>of akfane
+        </div>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="#" class="active">Boutique</a></li>
+          <!--
+          <li><a href="#about">À propos</a></li>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="#contact">Contact</a></li>
+          -->
+        </ul>
+      </nav>
+      <div style="display:flex;gap:14px;align-items:center">
+        <!--
+        ##<a href="#" style="color:var(--muted);text-decoration:none">Connexion</a>
+        -->
+        <div style="display:flex;gap:8px;align-items:center;color:var(--muted)">
+          <span>♡</span>
+          <a href="https://votreblog.blogspot.com/p/defense.html" style="text-decoration:none; color:inherit;">🛍️</a>
+
+
+        </div>
+      </div>
+    </div>
+  </header>
+  <main class="container">
+    <h1>كفن واحد  </h1>
+    <section class="products" aria-label="Produits">
+      <article class="card">
+        <div class="title"></div>
+        <div class="price"><span class="old"></span><span></span></div>
+      </article>
+      <article class="card">
+        <a class="product-image" href="#"><img src="https://images.openai.com/thumbnails/url/FOAIfHicu1mSUVJSUGylr5-al1xUWVCSmqJbkpRnoJdeXJJYkpmsl5yfq5-Zm5ieWmxfaAuUsXL0S7F0Tw4uCw01864ozCz2cjcLyvQOjc-zyMkOCDQ3cDZICc6oyikK1K1wd8wpt6go8ghLtvDJCTOy8HF1zvJNDFQrBgAe2imr" alt="Sac géométrique rétro"></a>
+        <div class="title">كفن رجل</div>
+        <div class="price">139 DH</div>
+        <button class="add-to-cart">Add to Cart</button>
+
+      </article>
+      <article class="card">
+        <a class="product-image" href="#"><img src="https://images.openai.com/thumbnails/url/w3xzWHicu1mSUVJSUGylr5-al1xUWVCSmqJbkpRnoJdeXJJYkpmsl5yfq5-Zm5ieWmxfaAuUsXL0S7F0Tw6Kt6x0DbXIiQwsCzQO9ovIC4vPdik3KjD1Ng8x8DW2LMrwyjJ28nYvLTX3LkrSTfQs9DMrKsh2LPVOLlcrBgAEDil3" alt="Sac mandala"></a>
+        <div class="title">كفن امرء </div>
+        <div class="price">159 DH</div>
+        <button class="add-to-cart">Add to Cart</button>
+
+      </article>
+      <article class="card">
+        <div class="title"></div>
+        <div class="price"></div>
+      </article>
+    <h2>عروط خاص الرجال </h2>
+      <article class="card">
+        <a class="product-image" href="#"><img src="https://images.openai.com/thumbnails/url/_b0iB3icu1mUUVJSUGylr5-al1xUWVCSmqJbkpRnoJdeXJJYkpmsl5yfq5-Zm5ieWmxfaAuUsXL0S7F0Tw72yywozy3yiMgPLnG1LEvxLi-OLHXNLU11SUvMCiir8DExqUp2TsuODEv2yDEpcC8Ljneq0i2JT_ZSKwYAA5kqtg" alt="Sac motif tropical"></a>
+        <div class="title">  اكفن رجل <h4>5</h4></div> 
+        <div class="price"><span class="old">695 DH</span><span>645 DH</span></div>
+        <button class="add-to-cart">Add to Cart</button>
+      </article>
+      <article class="card">
+        <a class="product-image" href="#"><img src="https://images.openai.com/thumbnails/url/FOAIfHicu1mSUVJSUGylr5-al1xUWVCSmqJbkpRnoJdeXJJYkpmsl5yfq5-Zm5ieWmxfaAuUsXL0S7F0Tw4uCw01864ozCz2cjcLyvQOjc-zyMkOCDQ3cDZICc6oyikK1K1wd8wpt6go8ghLtvDJCTOy8HF1zvJNDFQrBgAe2imr" alt="Sac géométrique rétro"></a>
+        <div class="title">  اكفن رجل <h4>10</h4></div> 
+        <div class="price"><span class="old">1 390 DH</span><span>1200 DH</span></div>
+        <button class="add-to-cart">Add to Cart</button>
+
+      </article>
+      <article class="card">
+        <a class="product-image" href="#"><img src="https://images.openai.com/thumbnails/url/w3xzWHicu1mSUVJSUGylr5-al1xUWVCSmqJbkpRnoJdeXJJYkpmsl5yfq5-Zm5ieWmxfaAuUsXL0S7F0Tw6Kt6x0DbXIiQwsCzQO9ovIC4vPdik3KjD1Ng8x8DW2LMrwyjJ28nYvLTX3LkrSTfQs9DMrKsh2LPVOLlcrBgAEDil3" alt="Sac mandala"></a>
+        <div class="title">  اكفن رجل <h4>20</h4></div> 
+        <div class="price"><span class="old">2 780 DH</span><span>2200 DH</span></div>
+        <button class="add-to-cart">Add to Cart</button>
+
+      </article>
+    <h3>عروط خاص النساء  </h3>
+      <article class="card">
+        <a class="product-image" href="#"><img src="https://images.openai.com/thumbnails/url/FOAIfHicu1mSUVJSUGylr5-al1xUWVCSmqJbkpRnoJdeXJJYkpmsl5yfq5-Zm5ieWmxfaAuUsXL0S7F0Tw4uCw01864ozCz2cjcLyvQOjc-zyMkOCDQ3cDZICc6oyikK1K1wd8wpt6go8ghLtvDJCTOy8HF1zvJNDFQrBgAe2imr" alt="Sac géométrique rétro"></a>
+        <div class="title">  اكفن رجل <h4>5</h4></div> 
+        <div class="price"><span class="old">795 DH</span><span>745 DH</span></div>
+        <button class="add-to-cart">Add to Cart</button>
+
+      </article>
+      <article class="card">
+        <a class="product-image" href="#"><img src="https://images.openai.com/thumbnails/url/FOAIfHicu1mSUVJSUGylr5-al1xUWVCSmqJbkpRnoJdeXJJYkpmsl5yfq5-Zm5ieWmxfaAuUsXL0S7F0Tw4uCw01864ozCz2cjcLyvQOjc-zyMkOCDQ3cDZICc6oyikK1K1wd8wpt6go8ghLtvDJCTOy8HF1zvJNDFQrBgAe2imr" alt="Sac géométrique rétro"></a>
+        <div class="title">  اكفن رجل <h4>10</h4></div> 
+        <div class="price"><span class="old">1 590 DH</span><span>1390 DH</span></div>
+        <button class="add-to-cart">Add to Cart</button>
+
+      </article>
+      <article class="card">
+        <a class="product-image" href="#"><img src="https://images.openai.com/thumbnails/url/FOAIfHicu1mSUVJSUGylr5-al1xUWVCSmqJbkpRnoJdeXJJYkpmsl5yfq5-Zm5ieWmxfaAuUsXL0S7F0Tw4uCw01864ozCz2cjcLyvQOjc-zyMkOCDQ3cDZICc6oyikK1K1wd8wpt6go8ghLtvDJCTOy8HF1zvJNDFQrBgAe2imr" alt="Sac géométrique rétro"></a>
+        <div class="title">  اكفن رجل <h4>10</h4></div> 
+        <div class="price"><span class="old">3 180 DH</span><span>2580 DH</span></div>
+        <button class="add-to-cart">Add to Cart</button>
+
+      </article>
+
+
+
+
+
+      
+    </section>
+    <section id="about" class="about">
+      <h2>À propos</h2>
+      <p>Paragraphe. Cliquez ici pour ajouter votre propre texte. Présentez votre activité à vos visiteurs et expliquez ce qui rend vos sacs uniques : matériaux, impressions, fabrication locale, engagements éthiques, etc.</p>
+    </section>
+  </main>
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <h4>Livraison et retour</h4>
+        <a href="#">Politique du magasin</a><br>
+        <a href="#">Moyens de paiement</a>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <div>Tél : 0680899888</div>
+        <div>quantarix56@gmail.com</div>
+      </div>
+      <div>
+        <h4>Réseaux</h4>
+        <a href="https://www.instagram.com/al_rahike/">Instagram</a><br>
+       <!-- 
+        <a href="#">Facebook</a><br>
+        <a href="#">Pinterest</a>
+         -->
+
+      </div>
+    </div>
+  </footer>
+  <!-- جافاسكريبت لتغيير لون الزر بعد الضغط -->
+<script>
+  // استرجاع حالة الأزرار عند تحميل الصفحة
+  document.querySelectorAll('.add-to-cart').forEach((button, index) => {
+    const state = localStorage.getItem('cartButton_' + index);
+    if (state === 'black') {
+      button.style.backgroundColor = '#000';
+      button.textContent = 'Added';
+    } else {
+      button.style.backgroundColor = '#9b2a2a';
+      button.textContent = 'Add to Cart';
+    }
+
+    // عند الضغط على الزر
+    button.addEventListener('click', () => {
+      if (button.style.backgroundColor === 'rgb(0, 0, 0)') {
+        // أسود → أحمر
+        button.style.backgroundColor = '#9b2a2a';
+        button.textContent = 'Add to Cart';
+        localStorage.setItem('cartButton_' + index, 'red');
+      } else {
+        // أحمر → أسود
+        button.style.backgroundColor = '#000';
+        button.textContent = 'Added';
+        localStorage.setItem('cartButton_' + index, 'black');
+      }
+    });
+  });
+</script>
+
+
+</body>
+</html>
