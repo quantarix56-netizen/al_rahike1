@@ -1,231 +1,675 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>al_rahike — of akfane</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
-  <style>
-    /* Styles identiques à la version précédente */
-    :root{--bg:#ffffff;--muted:#888;--accent:#9b2a2a;--accent-2:#f2f2f2;--container:1200px;}
-    *{box-sizing:border-box}
-    html,body{height:100%;margin:0;font-family:Montserrat,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial; background:var(--bg);color:var(--accent)}
-    header{border-bottom:1px solid #eee;background:transparent}
-    .topbar{max-width:var(--container);margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:22px 20px}
-    .brand{display:flex;align-items:center;gap:12px}
-    .brand h1{font-family:'Playfair Display',serif;margin:0;font-size:28px;letter-spacing:0.5px}
-    .brand p{margin:0;font-size:12px;color:var(--muted)}
-    nav ul{list-style:none;display:flex;gap:24px;margin:0;padding:0;align-items:center}
-    nav a{color:var(--muted);text-decoration:none;font-size:15px}
-    nav a.active{color:var(--accent);font-weight:600}
-    .container{max-width:var(--container);margin:36px auto;padding:0 20px}
-    .products{display:grid;grid-template-columns:repeat(4,1fr);gap:48px 40px;padding:20px 0}
-    .card{text-align:center;padding-bottom:100px}
-    .product-image{width:100%;aspect-ratio:3/4;display:flex;align-items:center;justify-content:center;background:transparent}
-    .product-image img{max-width:100%;max-height:100%;object-fit:contain;box-shadow:0 100px 50px rgba(0,0,0,0.06);border-radius:3px}
-    .title{font-size:20px;color:var(--muted);margin-top:18px}
-    .price{margin-top:5px;font-weight:1000}
-    .price .old{color:var(--muted);text-decoration:line-through;margin-right:8px;font-weight:400}
-    .about{background:var(--accent-2);padding:60px 20px;margin-top:40px;text-align:center}
-    .about h2{font-family:'Playfair Display',serif;font-size:32px;margin:0 0 14px}
-    .about p{max-width:760px;margin:0 auto;color:var(--muted);line-height:1.7}
-    footer{background:#0f0f0f;color:#fff;padding:48px 20px;margin-top:40px}
-    .footer-grid{max-width:var(--container);margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
-    .footer-grid a{color:#ddd;text-decoration:none}
-    .newsletter{grid-column:1/-1;margin-top:28px;display:flex;gap:12px;align-items:center}
-    .newsletter input{flex:1;padding:12px 14px;border:0;border-radius:3px}
-    .newsletter button{padding:12px 18px;border:0;background:#fff;color:#111;border-radius:3px;font-weight:600}
-    @media (max-width:1100px){.products{grid-template-columns:repeat(3,1fr)}}
-    @media (max-width:860px){.products{grid-template-columns:repeat(2,1fr);gap:36px}.brand h1{font-size:22px}}
-    @media (max-width:520px){.products{grid-template-columns:1fr}nav{display:none}.topbar{padding:14px}.footer-grid{grid-template-columns:1fr}.newsletter{flex-direction:column;align-items:stretch}.newsletter button{width:100%}}
-    .chat{position:fixed;right:18px;bottom:18px;background:#111;color:#fff;padding:12px 14px;border-radius:6px;box-shadow:0 8px 20px rgba(0,0,0,.2);font-weight:600}
-    .add-to-cart {
-          margin-top: 12px;
-          padding: 10px 16px;
-          background: var(--accent);
-          color: #fff;
-          border: none;
-          border-radius: 4px;
-          font-weight: 600;
-          cursor: pointer;
-          transition: background 0.2s ease;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Intelligent avec LM Studio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #7E57C2;
+            --secondary-color: #5E35B1;
+            --light-color: #F5F7FB;
+            --dark-color: #37474F;
+            --user-msg: #7E57C2;
+            --ai-msg: #E8EAF6;
+            --error-color: #F44336;
+            --success-color: #4CAF50;
+            --warning-color: #FF9800;
         }
-
-    .add-to-cart:hover {
-        background: #7a2121;
-    }
-
-
-  </style>
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6A11CB 0%, #2575FC 100%);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .chat-container {
+            width: 100%;
+            max-width: 1000px;
+            height: 90vh;
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.25);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .chat-header {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .chat-header h1 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .connection-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 12px;
+            border-radius: 20px;
+        }
+        
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #4CAF50;
+        }
+        
+        .status-dot.connected {
+            background-color: #4CAF50;
+            box-shadow: 0 0 8px #4CAF50;
+        }
+        
+        .status-dot.disconnected {
+            background-color: #F44336;
+        }
+        
+        .chat-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        .sidebar {
+            width: 280px;
+            background-color: #F5F7FB;
+            padding: 20px;
+            border-right: 1px solid #E0E0E0;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+        
+        .settings-group {
+            margin-bottom: 25px;
+        }
+        
+        .settings-group h3 {
+            font-size: 1rem;
+            margin-bottom: 12px;
+            color: var(--dark-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .settings-group input, .settings-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            transition: border-color 0.3s;
+        }
+        
+        .settings-group input:focus, .settings-group select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+        
+        .btn {
+            padding: 12px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .chat-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background-color: #f9f9f9;
+        }
+        
+        .message {
+            max-width: 80%;
+            padding: 14px 18px;
+            border-radius: 18px;
+            line-height: 1.5;
+            animation: fadeIn 0.3s ease;
+            position: relative;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .user-message {
+            align-self: flex-end;
+            background-color: var(--user-msg);
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+        
+        .ai-message {
+            align-self: flex-start;
+            background-color: var(--ai-msg);
+            color: var(--dark-color);
+            border-bottom-left-radius: 5px;
+        }
+        
+        .message-timestamp {
+            font-size: 0.7rem;
+            opacity: 0.7;
+            margin-top: 5px;
+            text-align: right;
+        }
+        
+        .chat-input-container {
+            padding: 20px;
+            border-top: 1px solid #E0E0E0;
+            background-color: white;
+            display: flex;
+            gap: 12px;
+        }
+        
+        .chat-input {
+            flex: 1;
+            padding: 16px;
+            border: 1px solid #ddd;
+            border-radius: 24px;
+            outline: none;
+            font-size: 1rem;
+            resize: none;
+            min-height: 50px;
+            max-height: 150px;
+            transition: border-color 0.3s;
+        }
+        
+        .chat-input:focus {
+            border-color: var(--primary-color);
+        }
+        
+        .send-button {
+            padding: 14px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 24px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s;
+            align-self: flex-end;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .send-button:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .typing-indicator {
+            align-self: flex-start;
+            background-color: var(--ai-msg);
+            color: #888;
+            padding: 12px 18px;
+            border-radius: 18px;
+            border-bottom-left-radius: 5px;
+            display: none;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .typing-indicator span {
+            animation: typing 1s infinite;
+            display: inline-block;
+        }
+        
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes typing {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+        
+        .error-message {
+            background-color: #FFEBEE;
+            color: var(--error-color);
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin: 10px 20px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .message-actions {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            display: flex;
+            gap: 5px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .message:hover .message-actions {
+            opacity: 1;
+        }
+        
+        .action-btn {
+            background: rgba(255, 255, 255, 0.3);
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.8rem;
+            color: inherit;
+        }
+        
+        .action-btn:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+        
+        .model-info {
+            background-color: #E3F2FD;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 0.85rem;
+            color: #0D47A1;
+        }
+        
+        @media (max-width: 768px) {
+            .chat-content {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid #E0E0E0;
+                padding: 15px;
+                max-height: 200px;
+            }
+            
+            .message {
+                max-width: 90%;
+            }
+            
+            .chat-header h1 {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <div class="topbar">
-      <div class="brand">
-        <img src="F:\logo.jpeg" style="width:46px;height:46px;border-radius:6px;object-fit:cover">
-        <div>
-          <h1>AL_rahike
-          <p>of akfane
+    <div class="chat-container">
+        <div class="chat-header">
+            <h1><i class="fas fa-robot"></i> Chat avec LM Studio</h1>
+            <div class="connection-status">
+                <div class="status-dot connected" id="status-dot"></div>
+                <span id="status-text">Connecté</span>
+            </div>
         </div>
-      </div>
-      <nav>
-        <ul>
-          <li><a href="#" class="active">Boutique</a></li>
-          <!--
-          <li><a href="#about">À propos</a></li>
-          <li><a href="#faq">FAQ</a></li>
-          <li><a href="#contact">Contact</a></li>
-          -->
-        </ul>
-      </nav>
-      <div style="display:flex;gap:14px;align-items:center">
-        <!--
-        ##<a href="#" style="color:var(--muted);text-decoration:none">Connexion</a>
-        -->
-        <div style="display:flex;gap:8px;align-items:center;color:var(--muted)">
-          <span>♡</span>
-          <a href="https://votreblog.blogspot.com/p/defense.html" style="text-decoration:none; color:inherit;">🛍️</a>
-
-
+        
+        <div class="error-message" id="error-message">
+            <i class="fas fa-exclamation-circle"></i>
+            Erreur de connexion à LM Studio. Vérifiez que le serveur local est en cours d'exécution.
         </div>
-      </div>
+        
+        <div class="chat-content">
+            <div class="sidebar">
+                <div class="settings-group">
+                    <h3><i class="fas fa-server"></i> Paramètres de connexion</h3>
+                    <input type="text" id="api-url" placeholder="URL de l'API: http://localhost:1234" value="http://localhost:1234">
+                    <select id="model-select">
+                        <option value="">Chargement des modèles...</option>
+                    </select>
+                    <div class="model-info" id="model-info">
+                        Sélectionnez un modèle pour voir les détails
+                    </div>
+                </div>
+                
+                <div class="settings-group">
+                    <h3><i class="fas fa-sliders-h"></i> Paramètres du modèle</h3>
+                    <input type="number" id="max-tokens" placeholder="Max tokens (100)" value="100" min="1" max="1000">
+                    <input type="number" id="temperature" placeholder="Température (0.7)" value="0.7" min="0" max="2" step="0.1">
+                </div>
+                
+                <button class="btn" id="connect-btn">
+                    <i class="fas fa-plug"></i> Se connecter
+                </button>
+                <button class="btn" id="clear-btn" style="background-color: #F44336; margin-top: 10px;">
+                    <i class="fas fa-trash"></i> Effacer la conversation
+                </button>
+            </div>
+            
+            <div class="chat-main">
+                <div class="chat-messages" id="chat-messages">
+                    <div class="message ai-message">
+                        <div class="message-actions">
+                            <button class="action-btn"><i class="fas fa-copy"></i></button>
+                            <button class="action-btn"><i class="fas fa-share"></i></button>
+                        </div>
+                        Bonjour ! Je suis votre assistant IA utilisant LM Studio. Comment puis-je vous aider aujourd'hui ?
+                        <div class="message-timestamp">Maintenant</div>
+                    </div>
+                </div>
+                
+                <div class="typing-indicator" id="typing-indicator">
+                    <span>.</span><span>.</span><span>.</span>
+                </div>
+                
+                <div class="chat-input-container">
+                    <textarea class="chat-input" id="user-input" placeholder="Tapez votre message ici..." rows="1"></textarea>
+                    <button class="send-button" id="send-button">
+                        <i class="fas fa-paper-plane"></i> Envoyer
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
-  </header>
-  <main class="container">
-    <h1>كفن واحد  </h1>
-    <section class="products" aria-label="Produits">
-      <article class="card">
-        <div class="title"></div>
-        <div class="price"><span class="old"></span><span></span></div>
-      </article>
-      <article class="card">
-        <a class="product-image" href="#"><img src="https://images.openai.com/thumbnails/url/FOAIfHicu1mSUVJSUGylr5-al1xUWVCSmqJbkpRnoJdeXJJYkpmsl5yfq5-Zm5ieWmxfaAuUsXL0S7F0Tw4uCw01864ozCz2cjcLyvQOjc-zyMkOCDQ3cDZICc6oyikK1K1wd8wpt6go8ghLtvDJCTOy8HF1zvJNDFQrBgAe2imr" alt="Sac géométrique rétro"></a>
-        <div class="title">كفن رجل</div>
-        <div class="price">139 DH</div>
-        <button class="add-to-cart">Add to Cart</button>
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const chatMessages = document.getElementById('chat-messages');
+    const userInput = document.getElementById('user-input');
+    const sendButton = document.getElementById('send-button');
+    const typingIndicator = document.getElementById('typing-indicator');
+    const connectButton = document.getElementById('connect-btn');
+    const clearButton = document.getElementById('clear-btn');
+    const statusDot = document.getElementById('status-dot');
+    const statusText = document.getElementById('status-text');
+    const errorMessage = document.getElementById('error-message');
+    const modelSelect = document.getElementById('model-select');
+    const apiUrlInput = document.getElementById('api-url');
+    const maxTokensInput = document.getElementById('max-tokens');
+    const temperatureInput = document.getElementById('temperature');
+    const modelInfo = document.getElementById('model-info');
 
-      </article>
-      <article class="card">
-        <a class="product-image" href="#"><img src="https://images.openai.com/thumbnails/url/w3xzWHicu1mSUVJSUGylr5-al1xUWVCSmqJbkpRnoJdeXJJYkpmsl5yfq5-Zm5ieWmxfaAuUsXL0S7F0Tw6Kt6x0DbXIiQwsCzQO9ovIC4vPdik3KjD1Ng8x8DW2LMrwyjJ28nYvLTX3LkrSTfQs9DMrKsh2LPVOLlcrBgAEDil3" alt="Sac mandala"></a>
-        <div class="title">كفن امرء </div>
-        <div class="price">159 DH</div>
-        <button class="add-to-cart">Add to Cart</button>
+    let isConnected = false;
+    let availableModels = [];
+    let conversationHistory = [];
 
-      </article>
-      <article class="card">
-        <div class="title"></div>
-        <div class="price"></div>
-      </article>
-    <h2>عروط خاص الرجال </h2>
-      <article class="card">
-        <a class="product-image" href="#"><img src="https://images.openai.com/thumbnails/url/_b0iB3icu1mUUVJSUGylr5-al1xUWVCSmqJbkpRnoJdeXJJYkpmsl5yfq5-Zm5ieWmxfaAuUsXL0S7F0Tw72yywozy3yiMgPLnG1LEvxLi-OLHXNLU11SUvMCiir8DExqUp2TsuODEv2yDEpcC8Ljneq0i2JT_ZSKwYAA5kqtg" alt="Sac motif tropical"></a>
-        <div class="title">  اكفن رجل <h4>5</h4></div> 
-        <div class="price"><span class="old">695 DH</span><span>645 DH</span></div>
-        <button class="add-to-cart">Add to Cart</button>
-      </article>
-      <article class="card">
-        <a class="product-image" href="#"><img src="https://images.openai.com/thumbnails/url/FOAIfHicu1mSUVJSUGylr5-al1xUWVCSmqJbkpRnoJdeXJJYkpmsl5yfq5-Zm5ieWmxfaAuUsXL0S7F0Tw4uCw01864ozCz2cjcLyvQOjc-zyMkOCDQ3cDZICc6oyikK1K1wd8wpt6go8ghLtvDJCTOy8HF1zvJNDFQrBgAe2imr" alt="Sac géométrique rétro"></a>
-        <div class="title">  اكفن رجل <h4>10</h4></div> 
-        <div class="price"><span class="old">1 390 DH</span><span>1200 DH</span></div>
-        <button class="add-to-cart">Add to Cart</button>
-
-      </article>
-      <article class="card">
-        <a class="product-image" href="#"><img src="https://images.openai.com/thumbnails/url/w3xzWHicu1mSUVJSUGylr5-al1xUWVCSmqJbkpRnoJdeXJJYkpmsl5yfq5-Zm5ieWmxfaAuUsXL0S7F0Tw6Kt6x0DbXIiQwsCzQO9ovIC4vPdik3KjD1Ng8x8DW2LMrwyjJ28nYvLTX3LkrSTfQs9DMrKsh2LPVOLlcrBgAEDil3" alt="Sac mandala"></a>
-        <div class="title">  اكفن رجل <h4>20</h4></div> 
-        <div class="price"><span class="old">2 780 DH</span><span>2200 DH</span></div>
-        <button class="add-to-cart">Add to Cart</button>
-
-      </article>
-    <h3>عروط خاص النساء  </h3>
-      <article class="card">
-        <a class="product-image" href="#"><img src="https://images.openai.com/thumbnails/url/FOAIfHicu1mSUVJSUGylr5-al1xUWVCSmqJbkpRnoJdeXJJYkpmsl5yfq5-Zm5ieWmxfaAuUsXL0S7F0Tw4uCw01864ozCz2cjcLyvQOjc-zyMkOCDQ3cDZICc6oyikK1K1wd8wpt6go8ghLtvDJCTOy8HF1zvJNDFQrBgAe2imr" alt="Sac géométrique rétro"></a>
-        <div class="title">  اكفن رجل <h4>5</h4></div> 
-        <div class="price"><span class="old">795 DH</span><span>745 DH</span></div>
-        <button class="add-to-cart">Add to Cart</button>
-
-      </article>
-      <article class="card">
-        <a class="product-image" href="#"><img src="https://images.openai.com/thumbnails/url/FOAIfHicu1mSUVJSUGylr5-al1xUWVCSmqJbkpRnoJdeXJJYkpmsl5yfq5-Zm5ieWmxfaAuUsXL0S7F0Tw4uCw01864ozCz2cjcLyvQOjc-zyMkOCDQ3cDZICc6oyikK1K1wd8wpt6go8ghLtvDJCTOy8HF1zvJNDFQrBgAe2imr" alt="Sac géométrique rétro"></a>
-        <div class="title">  اكفن رجل <h4>10</h4></div> 
-        <div class="price"><span class="old">1 590 DH</span><span>1390 DH</span></div>
-        <button class="add-to-cart">Add to Cart</button>
-
-      </article>
-      <article class="card">
-        <a class="product-image" href="#"><img src="https://images.openai.com/thumbnails/url/FOAIfHicu1mSUVJSUGylr5-al1xUWVCSmqJbkpRnoJdeXJJYkpmsl5yfq5-Zm5ieWmxfaAuUsXL0S7F0Tw4uCw01864ozCz2cjcLyvQOjc-zyMkOCDQ3cDZICc6oyikK1K1wd8wpt6go8ghLtvDJCTOy8HF1zvJNDFQrBgAe2imr" alt="Sac géométrique rétro"></a>
-        <div class="title">  اكفن رجل <h4>10</h4></div> 
-        <div class="price"><span class="old">3 180 DH</span><span>2580 DH</span></div>
-        <button class="add-to-cart">Add to Cart</button>
-
-      </article>
-
-
-
-
-
-      
-    </section>
-    <section id="about" class="about">
-      <h2>À propos</h2>
-      <p>Paragraphe. Cliquez ici pour ajouter votre propre texte. Présentez votre activité à vos visiteurs et expliquez ce qui rend vos sacs uniques : matériaux, impressions, fabrication locale, engagements éthiques, etc.</p>
-    </section>
-  </main>
-  <footer>
-    <div class="footer-grid">
-      <div>
-        <h4>Livraison et retour</h4>
-        <a href="#">Politique du magasin</a><br>
-        <a href="#">Moyens de paiement</a>
-      </div>
-      <div>
-        <h4>Contact</h4>
-        <div>Tél : 0680899888</div>
-        <div>quantarix56@gmail.com</div>
-      </div>
-      <div>
-        <h4>Réseaux</h4>
-        <a href="https://www.instagram.com/al_rahike/">Instagram</a><br>
-       <!-- 
-        <a href="#">Facebook</a><br>
-        <a href="#">Pinterest</a>
-         -->
-
-      </div>
-    </div>
-  </footer>
-  <!-- جافاسكريبت لتغيير لون الزر بعد الضغط -->
-<script>
-  // استرجاع حالة الأزرار عند تحميل الصفحة
-  document.querySelectorAll('.add-to-cart').forEach((button, index) => {
-    const state = localStorage.getItem('cartButton_' + index);
-    if (state === 'black') {
-      button.style.backgroundColor = '#000';
-      button.textContent = 'Added';
-    } else {
-      button.style.backgroundColor = '#9b2a2a';
-      button.textContent = 'Add to Cart';
+    // Fonction d'échappement HTML
+    function escapeHtml(text) {
+        const map = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;',
+        };
+        return text.replace(/[&<>"']/g, m => map[m]);
     }
 
-    // عند الضغط على الزر
-    button.addEventListener('click', () => {
-      if (button.style.backgroundColor === 'rgb(0, 0, 0)') {
-        // أسود → أحمر
-        button.style.backgroundColor = '#9b2a2a';
-        button.textContent = 'Add to Cart';
-        localStorage.setItem('cartButton_' + index, 'red');
-      } else {
-        // أحمر → أسود
-        button.style.backgroundColor = '#000';
-        button.textContent = 'Added';
-        localStorage.setItem('cartButton_' + index, 'black');
-      }
+    userInput.addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = (this.scrollHeight) + 'px';
     });
-  });
-</script>
 
+    function updateConnectionStatus(connected) {
+        isConnected = connected;
+        if (connected) {
+            statusDot.classList.remove('disconnected');
+            statusDot.classList.add('connected');
+            statusText.textContent = 'Connecté';
+            errorMessage.style.display = 'none';
+        } else {
+            statusDot.classList.remove('connected');
+            statusDot.classList.add('disconnected');
+            statusText.textContent = 'Déconnecté';
+            errorMessage.style.display = 'flex';
+        }
+    }
+
+    function addMessage(message, isUser) {
+        const messageElement = document.createElement('div');
+        messageElement.classList.add('message');
+        messageElement.classList.add(isUser ? 'user-message' : 'ai-message');
+
+        const timestamp = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+        messageElement.innerHTML = `
+            <div class="message-actions">
+                <button class="action-btn copy-btn" title="Copier"><i class="fas fa-copy"></i></button>
+                <button class="action-btn share-btn" title="Partager"><i class="fas fa-share"></i></button>
+                <button class="action-btn view-code-btn" title="Voir le code"><i class="fas fa-code"></i></button>
+            </div>
+            ${message}
+            <div class="message-timestamp">${timestamp}</div>
+        `;
+
+        chatMessages.appendChild(messageElement);
+        conversationHistory.push({ role: isUser ? "user" : "assistant", content: message, timestamp: new Date() });
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        const copyBtn = messageElement.querySelector('.copy-btn');
+        copyBtn.addEventListener('click', function() {
+            navigator.clipboard.writeText(message.replace(/<[^>]*>?/gm, '')); // Remove HTML tags
+            copyBtn.innerHTML = '<i class="fas fa-check"></i>';
+            setTimeout(() => {
+                copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
+            }, 2000);
+        });
+
+        const viewCodeBtn = messageElement.querySelector('.view-code-btn');
+        viewCodeBtn.addEventListener('click', function () {
+            const codeRegex = /<code[^>]*>([\s\S]*?)<\/code>/g;
+            const codeBlocks = [...message.matchAll(codeRegex)].map(m => m[1]);
+
+            if (codeBlocks.length === 0) {
+                alert("Aucun code détecté dans ce message.");
+                return;
+            }
+
+            const newWindow = window.open("", "_blank", "width=800,height=600");
+            newWindow.document.write(`
+                <html>
+                <head>
+                    <title>Code généré</title>
+                    <style>
+                        body { font-family: monospace; background-color: #1e1e1e; color: #d4d4d4; padding: 20px; }
+                        pre { background: #252526; padding: 16px; border-radius: 8px; overflow-x: auto; margin-bottom: 20px; }
+                        code { color: #dcdcaa; }
+                    </style>
+                </head>
+                <body>
+                    <h2>Code généré</h2>
+                    ${codeBlocks.map(code => `<pre><code>${escapeHtml(code)}</code></pre>`).join("")}
+                </body>
+                </html>
+            `);
+        });
+    }
+
+    function simulateAIResponse(userMessage) {
+        const responses = [
+            "Voici un exemple de code :\n<pre><code>console.log(\"Hello World\");</code></pre>",
+            "D'accord. Essayons ceci :\n<pre><code>let x = 10;\nconsole.log(x);</code></pre>",
+            "Je peux vous montrer un exemple si vous voulez.",
+            "Voici comment le faire en JavaScript :\n<pre><code>function greet(name) {\n  return `Hello ${name}`;\n}</code></pre>"
+        ];
+
+        if (/bonjour|salut/i.test(userMessage)) return "Bonjour ! Comment puis-je vous aider ?";
+        if (/merci/i.test(userMessage)) return "Je vous en prie !";
+        if (/au revoir|bye/i.test(userMessage)) return "Au revoir ! À bientôt.";
+        if (/nom/i.test(userMessage)) return "Je suis votre assistant IA.";
+        if (/aide/i.test(userMessage)) return "Je peux vous aider avec des codes, explications, etc.";
+
+        return responses[Math.floor(Math.random() * responses.length)];
+    }
+
+    async function sendToLMStudio(message) {
+        const apiUrl = apiUrlInput.value;
+        const maxTokens = parseInt(maxTokensInput.value) || 100;
+        const temperature = parseFloat(temperatureInput.value) || 0.7;
+
+        try {
+            const response = await fetch(`${apiUrl}/v1/chat/completions`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    model: modelSelect.value,
+                    messages: [{ role: "user", content: message }],
+                    max_tokens: maxTokens,
+                    temperature: temperature
+                })
+            });
+
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const data = await response.json();
+            return data.choices[0].message.content;
+        } catch (error) {
+            console.error("Erreur API:", error);
+            updateConnectionStatus(false);
+            return simulateAIResponse(message);
+        }
+    }
+
+    async function fetchModels() {
+        const apiUrl = apiUrlInput.value;
+
+        try {
+            const response = await fetch(`${apiUrl}/v1/models`);
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const data = await response.json();
+            availableModels = data.data;
+
+            modelSelect.innerHTML = '';
+            availableModels.forEach(model => {
+                const option = document.createElement('option');
+                option.value = model.id;
+                option.textContent = model.id;
+                modelSelect.appendChild(option);
+            });
+
+            if (availableModels.length > 0) {
+                modelSelect.value = availableModels[0].id;
+                updateModelInfo(availableModels[0]);
+            }
+
+            updateConnectionStatus(true);
+        } catch (error) {
+            console.error("Erreur chargement modèles:", error);
+            updateConnectionStatus(false);
+            modelSelect.innerHTML = '<option value="default">Simulation</option>';
+        }
+    }
+
+    function updateModelInfo(model) {
+        if (model && model.id !== "default") {
+            modelInfo.innerHTML = `<strong>${model.id}</strong><br>Modèle chargé avec succès`;
+        } else {
+            modelInfo.innerHTML = "Mode simulation activé - Pas de connexion à LM Studio";
+        }
+    }
+
+    async function sendMessage() {
+        const message = userInput.value.trim();
+
+        if (message) {
+            addMessage(message, true);
+            userInput.value = '';
+            userInput.style.height = 'auto';
+
+            typingIndicator.style.display = 'flex';
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            try {
+                let aiResponse;
+                if (isConnected && modelSelect.value !== "default") {
+                    aiResponse = await sendToLMStudio(message);
+                } else {
+                    await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000));
+                    aiResponse = simulateAIResponse(message);
+                }
+
+                typingIndicator.style.display = 'none';
+                addMessage(aiResponse, false);
+            } catch (error) {
+                typingIndicator.style.display = 'none';
+                addMessage("Une erreur s'est produite. Veuillez réessayer.", false);
+                console.error(error);
+            }
+        }
+    }
+
+    sendButton.addEventListener('click', sendMessage);
+    userInput.addEventListener('keypress', function(event) {
+        if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault();
+            sendMessage();
+        }
+    });
+
+    connectButton.addEventListener('click', fetchModels);
+
+    clearButton.addEventListener('click', function () {
+        chatMessages.innerHTML = '';
+        conversationHistory = [];
+    });
+
+    fetchModels(); // Initial connection
+});
+</script>
 
 </body>
 </html>
