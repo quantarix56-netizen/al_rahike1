@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -16,6 +16,8 @@
             --error-color: #F44336;
             --success-color: #4CAF50;
             --warning-color: #FF9800;
+            --code-bg: #1e1e1e;
+            --code-text: #d4d4d4;
         }
         
         * {
@@ -37,7 +39,7 @@
         
         .chat-container {
             width: 100%;
-            max-width: 1000px;
+            max-width: 1400px;
             height: 90vh;
             background-color: white;
             border-radius: 16px;
@@ -90,7 +92,7 @@
             background-color: #F44336;
         }
         
-        .chat-content {
+        .main-content {
             display: flex;
             flex: 1;
             overflow: hidden;
@@ -158,11 +160,12 @@
             transform: translateY(0);
         }
         
-        .chat-main {
+        .chat-section {
             flex: 1;
             display: flex;
             flex-direction: column;
             position: relative;
+            border-right: 1px solid #E0E0E0;
         }
         
         .chat-messages {
@@ -337,11 +340,105 @@
             color: #0D47A1;
         }
         
-        @media (max-width: 768px) {
-            .chat-content {
+        /* Code Section Styles */
+        .code-section {
+            width: 40%;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--code-bg);
+            color: var(--code-text);
+        }
+        
+        .code-header {
+            padding: 15px 20px;
+            background-color: #2d2d30;
+            border-bottom: 1px solid #3e3e42;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .code-header h2 {
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .code-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .code-btn {
+            background-color: #0e639c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .code-btn:hover {
+            background-color: #1177bb;
+        }
+        
+        .code-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+            white-space: pre-wrap;
+            line-height: 1.5;
+        }
+        
+        .code-content pre {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .code-content code {
+            color: #dcdcaa;
+        }
+        
+        .no-code-message {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+            color: #888;
+        }
+        
+        .no-code-message i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #444;
+        }
+        
+        @media (max-width: 1200px) {
+            .main-content {
                 flex-direction: column;
             }
             
+            .code-section {
+                width: 100%;
+                height: 40%;
+                border-top: 1px solid #3e3e42;
+            }
+            
+            .chat-section {
+                border-right: none;
+                height: 60%;
+            }
+        }
+        
+        @media (max-width: 768px) {
             .sidebar {
                 width: 100%;
                 border-right: none;
@@ -375,7 +472,7 @@
             Erreur de connexion à LM Studio. Vérifiez que le serveur local est en cours d'exécution.
         </div>
         
-        <div class="chat-content">
+        <div class="main-content">
             <div class="sidebar">
                 <div class="settings-group">
                     <h3><i class="fas fa-server"></i> Paramètres de connexion</h3>
@@ -402,7 +499,7 @@
                 </button>
             </div>
             
-            <div class="chat-main">
+            <div class="chat-section">
                 <div class="chat-messages" id="chat-messages">
                     <div class="message ai-message">
                         <div class="message-actions">
@@ -425,6 +522,27 @@
                     </button>
                 </div>
             </div>
+            
+            <div class="code-section">
+                <div class="code-header">
+                    <h2><i class="fas fa-code"></i> Code Généré</h2>
+                    <div class="code-actions">
+                        <button class="code-btn" id="copy-code-btn">
+                            <i class="fas fa-copy"></i> Copier
+                        </button>
+                        <button class="code-btn" id="download-code-btn">
+                            <i class="fas fa-download"></i> Télécharger
+                        </button>
+                    </div>
+                </div>
+                <div class="code-content" id="code-content">
+                    <div class="no-code-message">
+                        <i class="fas fa-code"></i>
+                        <p>Aucun code généré pour le moment</p>
+                        <p>Le code généré par l'IA apparaîtra ici</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <script>
@@ -443,10 +561,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const maxTokensInput = document.getElementById('max-tokens');
     const temperatureInput = document.getElementById('temperature');
     const modelInfo = document.getElementById('model-info');
+    const codeContent = document.getElementById('code-content');
+    const copyCodeBtn = document.getElementById('copy-code-btn');
+    const downloadCodeBtn = document.getElementById('download-code-btn');
 
     let isConnected = false;
     let availableModels = [];
     let conversationHistory = [];
+    let currentCode = '';
 
     // Fonction d'échappement HTML
     function escapeHtml(text) {
@@ -512,32 +634,33 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const viewCodeBtn = messageElement.querySelector('.view-code-btn');
         viewCodeBtn.addEventListener('click', function () {
-            const codeRegex = /<code[^>]*>([\s\S]*?)<\/code>/g;
-            const codeBlocks = [...message.matchAll(codeRegex)].map(m => m[1]);
-
-            if (codeBlocks.length === 0) {
-                alert("Aucun code détecté dans ce message.");
-                return;
-            }
-
-            const newWindow = window.open("", "_blank", "width=800,height=600");
-            newWindow.document.write(`
-                <html>
-                <head>
-                    <title>Code généré</title>
-                    <style>
-                        body { font-family: monospace; background-color: #1e1e1e; color: #d4d4d4; padding: 20px; }
-                        pre { background: #252526; padding: 16px; border-radius: 8px; overflow-x: auto; margin-bottom: 20px; }
-                        code { color: #dcdcaa; }
-                    </style>
-                </head>
-                <body>
-                    <h2>Code généré</h2>
-                    ${codeBlocks.map(code => `<pre><code>${escapeHtml(code)}</code></pre>`).join("")}
-                </body>
-                </html>
-            `);
+            extractAndDisplayCode(message);
         });
+    }
+
+    function extractAndDisplayCode(message) {
+        const codeRegex = /<code[^>]*>([\s\S]*?)<\/code>/g;
+        const codeBlocks = [...message.matchAll(codeRegex)].map(m => m[1]);
+        
+        if (codeBlocks.length === 0) {
+            codeContent.innerHTML = `
+                <div class="no-code-message">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <p>Aucun code détecté dans ce message</p>
+                </div>
+            `;
+            currentCode = '';
+            return;
+        }
+        
+        // Concaténer tous les blocs de code
+        const allCode = codeBlocks.join('\n\n');
+        currentCode = allCode;
+        
+        // Afficher le code avec coloration syntaxique basique
+        codeContent.innerHTML = `
+            <pre><code>${escapeHtml(allCode)}</code></pre>
+        `;
     }
 
     function simulateAIResponse(userMessage) {
@@ -644,6 +767,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 typingIndicator.style.display = 'none';
                 addMessage(aiResponse, false);
+                
+                // Extraire et afficher le code s'il y en a
+                extractAndDisplayCode(aiResponse);
             } catch (error) {
                 typingIndicator.style.display = 'none';
                 addMessage("Une erreur s'est produite. Veuillez réessayer.", false);
@@ -651,6 +777,32 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     }
+
+    // Copier le code dans le presse-papier
+    copyCodeBtn.addEventListener('click', function() {
+        if (currentCode) {
+            navigator.clipboard.writeText(currentCode);
+            copyCodeBtn.innerHTML = '<i class="fas fa-check"></i> Copié';
+            setTimeout(() => {
+                copyCodeBtn.innerHTML = '<i class="fas fa-copy"></i> Copier';
+            }, 2000);
+        }
+    });
+
+    // Télécharger le code
+    downloadCodeBtn.addEventListener('click', function() {
+        if (currentCode) {
+            const blob = new Blob([currentCode], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'code-genere.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    });
 
     sendButton.addEventListener('click', sendMessage);
     userInput.addEventListener('keypress', function(event) {
@@ -665,6 +817,14 @@ document.addEventListener('DOMContentLoaded', function() {
     clearButton.addEventListener('click', function () {
         chatMessages.innerHTML = '';
         conversationHistory = [];
+        codeContent.innerHTML = `
+            <div class="no-code-message">
+                <i class="fas fa-code"></i>
+                <p>Aucun code généré pour le moment</p>
+                <p>Le code généré par l'IA apparaîtra ici</p>
+            </div>
+        `;
+        currentCode = '';
     });
 
     fetchModels(); // Initial connection
